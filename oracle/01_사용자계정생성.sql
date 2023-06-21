@@ -8,5 +8,9 @@ CREATE USER kh IDENTIFIED BY kh;
 -- CONNECT 권한이 없으면 해당 유저로 접속이 되지 않음
 GRANT RESOURCE, CONNECT TO kh;
 
--- 이 오류가 자주 나서 권한 부여
+-- TABLESPACE 오류가 자주 나서 권한 부여
 GRANT UNLIMITED TABLESPACE TO kh;
+
+CREATE USER study IDENTIFIED BY study;
+GRANT RESOURCE, CONNECT TO study;
+GRANT UNLIMITED TABLESPACE TO study;

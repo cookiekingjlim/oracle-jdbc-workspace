@@ -116,6 +116,7 @@
     FROM EMPLOYEE
     JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
     WHERE DEPT_TITLE != '총무부';
+    
  
  
  

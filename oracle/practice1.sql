@@ -7,8 +7,7 @@
  FROM TB_DEPARTMENT;
  
  --3. "국어국문학과"에 다니는 여학생 중 현재 휴학중인 여학생을 찾아달라는 요청이 들어왓다. 누구인가? (국문학과의 '학과코드'는 학과 테이블(TB_DEPARTMENT)을 조회해서 찾아내도록 하자
- SELECT STUDENT_NAME, DEPARTMENT_NAME, ABSENCE_YN
- FROM TB_DEPARTMENT, TB_STUDENT
- WHERE DEPARTMENT_NAME = '국어국문학과';
+ 
+ 
  
  

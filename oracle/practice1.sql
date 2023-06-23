@@ -7,10 +7,10 @@
  FROM TB_DEPARTMENT;
  
  --3. "국어국문학과"에 다니는 여학생 중 현재 휴학중인 여학생을 찾아달라는 요청이 들어왓다. 누구인가? (국문학과의 '학과코드'는 학과 테이블(TB_DEPARTMENT)을 조회해서 찾아내도록 하자
- SELECT DEPARTMENT_NAME, STUDENT_NAME
+ SELECT DEPARTMENT_NAME, STUDENT_NAME, STUDENT_SSN
  FROM TB_STUDENT
  JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
- WHERE  DEPARTMENT_NAME = '국어국문학과' AND ABSENCE_YN = 'Y';
+ WHERE  DEPARTMENT_NAME = '국어국문학과' AND ABSENCE_YN = 'Y' AND SUBSTR(STUDENT_SSN,8,1) = '2';
  
  --4. 도서관에서 대출 도서 장기 연체자 들을 찾아 이름을 게시하고자 한다. 그 대상자들의 학번이 다음과 같을 때 대상자들을 찾는 적절한 SoL 구문을 작성하시오.
  -- A513079, A513090, A513091, A513110, A513119
@@ -33,6 +33,19 @@
  FROM TB_STUDENT
  WHERE DEPARTMENT_NO IS NULL;   --학과 번호가 아니라 지도교수 여부로 해야하나...?
  
+ --8. 수강신청을 하려고 한다. 선수과목 여부를 화인해야 하는데, 선수과목이 존재하는 과목들은 어떤 과목인지 과목번호를 조회해보시오.
+ SELECT CLASS_NO, CLASS_NAME
+ FROM TB_CLASS
+ WHERE PREATTENDING_CLASS_NO IS NOT NULL;
+ 
+ --9. 춘 대학에는 어떤 계열(CATEGORY)들이 있는지 조회해보시오
+ SELECT DISTINCT CATEGORY
+ FROM TB_DEPARTMENT;
+ 
+ --10. 02 학번 전주 거주자들의 모임을 만들려고 한다. 휴학한 사람들은 제외한 재학중인 학생들의 학번, 이름, 주민번호를 출력하는 구문을 작성하시오
+ SELECT STUDENT_NO, STUDENT_NAME, STUDENT_SSN, ENTRANCE_DATE, ABSENCE_YN,STUDENT_ADDRESS
+ FROM TB_STUDENT
+ WHERE ENTRANCE_DATE LIKE '02%' AND ABSENCE_YN != 'Y' AND STUDENT_ADDRESS LIKE '전주%';
 
 
 

@@ -165,12 +165,28 @@
  /*
     DROP
     - 객체를 삭제하는 구문
- 
  */
+ -- DEPT_TEST 테이블 삭제
+ DROP TABLE DEPT_TEST;
  
+ -- 참조되고 있는 부모 테이블은 삭제 되지 않는다.
+ DROP TABLE MEMBER_GRADE;
+ 
+ -- 만약 삭제하고자 한다면
+ -- 방법1. 자식 테이블을 먼저 삭제한 후 부모 테이블을 삭제한다.
+ DROP TABLE MEMBER;
+ DROP TABLE MEMBER_GRADE;
+ 
+ -- 방법2. 그냥 부모테이블만 삭제하는데 제약조건까지 같이 삭제하는 방법
+ DROP TABLE MEMBER_GRADE CASCADE CONSTRAINT;
+  
  SELECT * FROM DEPT_TEST;
+ 
+ 
+ SELECT * FROM MEMBER_GRADE;
  SELECT * FROM DEPT_COPY;
  SELECT * FROM MEMBER;
+ 
 
 
  

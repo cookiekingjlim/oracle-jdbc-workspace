@@ -58,44 +58,51 @@ public class PersonTest {
 		
 	}
 
-	public void removePerson(int id) {
-//		// 1. 드라이버 로딩
-//			try {
-//					
-//			Properties p = new Properties();
-//			try {
-//			p.load(new FileInputStream("src/config/jdbc.properties"));
-//			} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//			} catch (IOException e) {
-//			e.printStackTrace();
-//			}
-//					
-//			Class.forName(ServerInfo.DRIVER_NAME);
-//			System.out.println("Driver Loading....");
-//					
-//			// 2. 디비 연결
-//			Connection conn = DriverManager.getConnection(ServerInfo.URL, ServerInfo.USER, ServerInfo.PASSWORD);
-//			System.out.println("DB Connection...!");
-//			
-//			// 3. Statement 객체 생성
-//			String query = p.getProperty("jdbc.sql.removePerson");
-//			PreparedStatement st = conn.prepareStatement(query);
-//			
+	public void removePerson(int id) throws SQLException {
+		Connection conn = getConnect();
+		PreparedStatement st = conn.prepareStatement(p.getProperty("removePerson"));
+		
+		st.setInt(1, id);
+		int result = st.executeUpdate();
+		System.out.println(result + "명 삭제!");
+		
+		closeAll(conn,st);
+			
 	}
 
 
-
-	public void updatePerson(int id, String address) {
+	public void updatePerson(int id, String address) throws SQLException {
+		Connection conn = getConnect();
+		PreparedStatement st = conn.prepareStatement(p.getProperty("updatePerson"));
+		
+		st.setString(1, address);
+		st.setInt(2, id);
+		int result = st.executeUpdate();
+		System.out.println(result + "명 수정!");
+		
+		closeAll(conn,st);
 
 	}
 
-	public void searchAllPerson() {
-
+	public void searchAllPerson() throws SQLException {
+		Connection conn = getConnect();
+		PreparedStatement st = conn.prepareStatement(p.getProperty("searchAllPerson"));
+		
+		ResultSet rs = st.executeQuery();
+		while(rs.next()) {
+			System.out.println(rs.getString("name") + "," + rs.getString("address"));
+		}
 	}
 
-	public void viewPerson(int id) {
-
+	public void viewPerson(int id) throws SQLException {
+		Connection conn = getConnect();
+		PreparedStatement st = conn.prepareStatement(p.getProperty("viewPerson"));
+		st.setInt(1, id);
+		
+		ResultSet rs = st.executeQuery();
+		if(rs.next()) {	// rs.next가 있다면
+			System.out.println(rs.getString("name") + "," + rs.getString("address"));	//이걸 출력
+		}
 	}
 
 	public static void main(String[] args) {
@@ -110,15 +117,13 @@ public class PersonTest {
 				pt.addPerson("김강우", "서울");
 				pt.addPerson("고아라", "제주도");
 				pt.addPerson("강태주", "경기도");
+				pt.searchAllPerson();
+				pt.removePerson(3); // 강태주 삭제
+				pt.updatePerson(1, "제주도");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			
-			pt.searchAllPerson();
-			
-			pt.removePerson(3); // 강태주 삭제
-			
-			pt.updatePerson(1, "제주도");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -127,3 +132,6 @@ public class PersonTest {
 	}
 
 }
+
+
+// set은 jdbc.properties에서 ?있을 때마다 써

@@ -4,6 +4,7 @@
     NAME VARCHAR2(100)
 );
 
+ SELECT * FROM MEMBER;
 
 
 

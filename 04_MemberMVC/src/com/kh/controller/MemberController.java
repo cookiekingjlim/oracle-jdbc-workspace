@@ -34,8 +34,7 @@ public class MemberController {
 			Member m = new Member();
 			m.setId(id);
 			m.setPassword(password);
-			Member login;
-			login = dao.login(m);
+			Member login = dao.login(m);
 			if(login != null) {
 				return login.getName();
 			} 
@@ -49,15 +48,17 @@ public class MemberController {
 	
 	public boolean changePassword(String id, String oldPw, String newPw) {
 		// 로그인 했을 때 null이 아닌 경우
-		// 비밀번호 변경 후 true 반환, 아니라면 false 반환
 		Member m = new Member();
 		m.setId(id);
-		m.setPassword(newPw);
+		m.setPassword(oldPw);	//이걸 통해 로그인 할 거니까
 		
 		try {
-			dao.getMember(oldPw).setPassword(newPw);
-			dao.updatePassword(m);
-			return true;
+			if(dao.login(m) != null) {
+			// 비밀번호 변경 후 true 반환, 아니라면 false 반환
+				m.setPassword(newPw);
+				dao.updatePassword(m);
+				return true;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -71,7 +72,6 @@ public class MemberController {
 		m.setName(name);
 		
 		try {
-			dao.getMember(id).setName(name);
 			dao.updateName(m);
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -62,22 +62,21 @@ public class BookDAO implements BookDAOTemplate {
 		PreparedStatement st = conn.prepareStatement(p.getProperty("printBookAll"));
 		
 		ResultSet rs = st.executeQuery();
-		ArrayList<Book>booklist = new ArrayList();
+		ArrayList<Book>bookList = new ArrayList();
 		
 		while(rs.next()) {
-			booklist.add(new Book(rs.getString("bkTitle"), rs.getString("bk_author")));
+			bookList.add(new Book(rs.getInt("bk_no"), rs.getString("bk_title"), rs.getString("bk_author")));
 		}
 		closeAll(rs, st, conn);
-		return booklist;
+		return bookList;
 	}
 
 	@Override
 	public int registerBook(Book book) throws SQLException {
 		Connection conn = getConnect();
 		PreparedStatement st = conn.prepareStatement(p.getProperty("registerBook"));
-		st.setInt(1, book.getBkNo());
-		st.setString(2, book.getBkTitle());
-		st.setString(3, book.getBkAuthor());
+		st.setString(1, book.getBkTitle());
+		st.setString(2, book.getBkAuthor());
 		int result = st.executeUpdate();
 		closeAll(st,conn);
 		
@@ -100,7 +99,7 @@ public class BookDAO implements BookDAOTemplate {
 	public int registerMember(Member member) throws SQLException {
 		// id, name, password
 		Connection conn = getConnect();
-		PreparedStatement st = conn.prepareStatement(p.getProperty("registeMember"));
+		PreparedStatement st = conn.prepareStatement(p.getProperty("registerMember"));
 		st.setString(1, member.getMemberId());
 		st.setString(2, member.getMemberPwd());
 		st.setString(3, member.getMemberName());
@@ -121,7 +120,13 @@ public class BookDAO implements BookDAOTemplate {
 		
 		Member m = null;
 		if(rs.next()) {
-			m = new Member(rs.getString("id"), rs.getString("password"), rs.getString("name"));
+			m = new Member();
+			m.setMemberNo(rs.getInt("member_no"));
+			m.setMemberId(rs.getString("member_id"));
+			m.setMemberPwd(rs.getString("member_pwd"));
+			m.setMemberName(rs.getString("member_name"));
+			m.setStatus(rs.getString("status").charAt(0));
+			m.setEnrollDate(rs.getDate("enroll_date"));
 		}
 		closeAll(rs, st, conn);
 		return m;
@@ -147,7 +152,7 @@ public class BookDAO implements BookDAOTemplate {
 	public int rentBook(Rent rent) throws SQLException {
 		Connection conn = getConnect();
 		PreparedStatement st = conn.prepareStatement(p.getProperty("rentBook"));
-		st.setString(1, rent.getMember().getMemberId());
+		st.setInt(1, rent.getMember().getMemberNo());
 		st.setInt(2, rent.getBook().getBkNo());
 		int result = st.executeUpdate();
 		closeAll(st,conn);
@@ -178,7 +183,20 @@ public class BookDAO implements BookDAOTemplate {
 		PreparedStatement st = conn.prepareStatement(p.getProperty("printRentBook"));
 		st.setString(1, id);
 		
-		return null;
+		ResultSet rs = st.executeQuery();
+		ArrayList<Rent> rentList = new ArrayList<>();
+		
+		while(rs.next()) {
+			Rent rent = new Rent();
+			rent.setRentNo(rs.getInt("rent_no"));
+			rent.setRentDate(rs.getDate("rent_date"));
+			rent.setBook(new Book(rs.getString("bk_title"), rs.getString("bk_author")));
+			rentList.add(rent);
+			
+		}
+		closeAll(rs,st,conn);
+		
+		return rentList;
 	}
 
 }
